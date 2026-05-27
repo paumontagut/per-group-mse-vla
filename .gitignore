@@ -1,0 +1,37 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+.env
+
+# Outputs and checkpoints (regenerated, never tracked)
+outputs/
+checkpoints/
+wandb/
+*.log
+
+# Datasets (never tracked, pull from official sources)
+datasets/
+*.parquet
+*.arrow
+
+# LaTeX intermediates
+*.aux
+*.bbl
+*.blg
+*.log
+*.out
+*.toc
+*.idx
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+
+# Editor / OS noise
+.DS_Store
+.idea/
+.vscode/
+*.swp

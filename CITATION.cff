@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the accompanying paper."
+title: "Per-Group Error, Not Total MSE: Fine-Tuning Vision-Language-Action Models for 11-DoF Mobile Manipulation"
+authors:
+  - family-names: Montagut Bofi
+    given-names: Pau
+    affiliation: "TU Wien, Automation and Control Institute (ACIN), Vision for Robotics Lab"
+  - family-names: García Blasco
+    given-names: Mario
+    affiliation: "TU Wien, Automation and Control Institute (ACIN), Vision for Robotics Lab"
+  - family-names: Pulli
+    given-names: Tessa
+    affiliation: "TU Wien, Automation and Control Institute (ACIN), Vision for Robotics Lab"
+  - family-names: Vincze
+    given-names: Markus
+    affiliation: "TU Wien, Automation and Control Institute (ACIN), Vision for Robotics Lab"
+license: MIT
+repository-code: "https://github.com/paumontagut/per-group-mse-vla"
+url: "https://arxiv.org/abs/2606.00253"
+identifiers:
+  - type: other
+    value: "arXiv:2606.00253"
+    description: "arXiv preprint"
+keywords:
+  - vision-language-action
+  - robot-learning
+  - mobile-manipulation
+  - Toyota HSR
+  - SmolVLA
+  - ICRA 2026
+preferred-citation:
+  type: conference-paper
+  title: "Per-Group Error, Not Total MSE: Fine-Tuning Vision-Language-Action Models for 11-DoF Mobile Manipulation"
+  authors:
+    - family-names: Montagut Bofi
+      given-names: Pau
+    - family-names: García Blasco
+      given-names: Mario
+    - family-names: Pulli
+      given-names: Tessa
+    - family-names: Vincze
+      given-names: Markus
+  collection-title: "ICRA 2026 Workshop on From Data to Decisions"
+  year: 2026
+  identifiers:
+    - type: other
+      value: "arXiv:2606.00253"
+      description: "arXiv preprint"
+  url: "https://arxiv.org/abs/2606.00253"
