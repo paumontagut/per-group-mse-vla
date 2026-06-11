@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Per-Group Error, Not Total MSE · ICRA 2026</title>
+<meta name="description" content="Companion page for the ICRA 2026 Workshop paper on fine-tuning Vision-Language-Action models for 11-DoF mobile manipulation on the Toyota HSR. 1st place out of 36 teams in the AIRoA VLA Pipeline Competition.">
+<meta name="author" content="Pau Montagut Bofi, Mario García Blasco, Tessa Pulli, Markus Vincze">
+
+<meta property="og:title" content="Per-Group Error, Not Total MSE: Fine-Tuning VLAs for 11-DoF Mobile Manipulation">
+<meta property="og:description" content="ICRA 2026 Workshop From Data to Decisions. 1st place out of 36 teams.">
+<meta property="og:image" content="https://paumontagut.github.io/per-group-mse-vla/assets/img/og_cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Per-Group Error, Not Total MSE. ICRA 2026 workshop paper, 1st place out of 36 teams.">
+<meta property="og:url" content="https://paumontagut.github.io/per-group-mse-vla/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='4' y='4' width='24' height='24' rx='8' fill='%23E8663C'/%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="canonical" href="https://paumontagut.github.io/per-group-mse-vla/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="keywords" content="vision-language-action, VLA, robot learning, mobile manipulation, Toyota HSR, SmolVLA, pi0.5, per-group MSE, ICRA 2026, fine-tuning, imitation learning, LeRobot, openpi">
+<meta name="theme-color" content="#fafaf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+
+<meta property="og:site_name" content="Per-Group Error, Not Total MSE">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:title" content="Per-Group Error, Not Total MSE: Fine-Tuning VLAs for 11-DoF Mobile Manipulation">
+<meta name="twitter:description" content="ICRA 2026 Workshop From Data to Decisions. 1st place out of 36 teams in the AIRoA VLA Pipeline Competition.">
+<meta name="twitter:image" content="https://paumontagut.github.io/per-group-mse-vla/assets/img/og_cover.png">
+<meta name="twitter:image:alt" content="Per-Group Error, Not Total MSE. ICRA 2026 workshop paper, 1st place out of 36 teams.">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "ScholarlyArticle",
+      "@id": "https://paumontagut.github.io/per-group-mse-vla/#paper",
+      "headline": "Per-Group Error, Not Total MSE: Fine-Tuning Vision-Language-Action Models for 11-DoF Mobile Manipulation",
+      "abstract": "We decompose the offline MSE of Vision-Language-Action models into the four joint groups of the Toyota HSR and use the decomposition as a checkpoint-selection signal. In a 60-trial real-robot evaluation the arm-MSE ranking matched the robot ranking while the total-MSE ranking did not.",
+      "author": [
+        {"@type": "Person", "name": "Pau Montagut Bofi", "url": "https://paumontagut.github.io/", "affiliation": [{"@type": "Organization", "name": "TU Wien"}, {"@type": "Organization", "name": "Universitat Jaume I"}]},
+        {"@type": "Person", "name": "Mario García Blasco", "affiliation": [{"@type": "Organization", "name": "TU Wien"}, {"@type": "Organization", "name": "Universitat Jaume I"}]},
+        {"@type": "Person", "name": "Tessa Pulli", "affiliation": {"@type": "Organization", "name": "TU Wien"}},
+        {"@type": "Person", "name": "Markus Vincze", "url": "https://www.acin.tuwien.ac.at/en/staff/vm/", "affiliation": {"@type": "Organization", "name": "TU Wien"}}
+      ],
+      "datePublished": "2026-06-02",
+      "publisher": {"@type": "Organization", "name": "ICRA 2026 Workshop on From Data to Decisions"},
+      "identifier": "arXiv:2606.00253",
+      "sameAs": ["https://arxiv.org/abs/2606.00253"],
+      "url": "https://paumontagut.github.io/per-group-mse-vla/",
+      "image": "https://paumontagut.github.io/per-group-mse-vla/assets/img/og_cover.png",
+      "license": "https://creativecommons.org/licenses/by/4.0/",
+      "keywords": "vision-language-action, mobile manipulation, Toyota HSR, SmolVLA, per-group MSE, ICRA 2026",
+      "award": "1st place, AIRoA VLA Pipeline Competition (36 teams)"
+    },
+    {
+      "@type": "SoftwareSourceCode",
+      "name": "per-group-mse-vla",
+      "codeRepository": "https://github.com/paumontagut/per-group-mse-vla",
+      "programmingLanguage": "Python",
+      "license": "https://opensource.org/licenses/MIT",
+      "about": {"@id": "https://paumontagut.github.io/per-group-mse-vla/#paper"}
+    },
+    {
+      "@type": "WebPage",
+      "url": "https://paumontagut.github.io/per-group-mse-vla/",
+      "name": "Per-Group Error, Not Total MSE · ICRA 2026",
+      "isPartOf": {"@type": "WebSite", "url": "https://paumontagut.github.io/"},
+      "mainEntity": {"@id": "https://paumontagut.github.io/per-group-mse-vla/#paper"}
+    }
+  ]
+}
+</script>
+
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+  <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1.5M12 19.5V21M4.22 4.22l1.06 1.06M17.72 17.72l1.06 1.06M3 12h1.5M19.5 12H21M4.22 19.78l1.06-1.06M17.72 6.28l1.06-1.06M16.5 12a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+  </svg>
+  <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/>
+  </svg>
+</button>
+
+<!-- ── HERO ── -->
+<header class="hero">
+  <div class="hero-logos">
+    <a href="https://www.uji.es/" target="_blank" rel="noopener" title="Universitat Jaume I">
+      <img src="assets/img/logo_uji.png" alt="Universitat Jaume I" class="uji logo-light">
+      <img src="assets/img/logo_uji_dark.png" alt="Universitat Jaume I" class="uji logo-dark">
+    </a>
+    <a href="https://www.tuwien.at/" target="_blank" rel="noopener" title="TU Wien">
+      <img src="assets/img/logo_tuwien.png" alt="TU Wien" class="tuwien logo-light">
+      <img src="assets/img/logo_tuwien_dark.png" alt="TU Wien" class="tuwien logo-dark">
+    </a>
+    <a href="https://www.acin.tuwien.ac.at/" target="_blank" rel="noopener" title="ACIN, TU Wien">
+      <img src="assets/img/logo_acin.png" alt="ACIN, TU Wien" class="acin logo-light">
+      <img src="assets/img/logo_acin_dark.png" alt="ACIN, TU Wien" class="acin logo-dark">
+    </a>
+  </div>
+
+  <div class="hero-label">
+    ICRA 2026 Workshop · From Data to Decisions ·
+    <span class="win">1st place / 36 teams</span>
+  </div>
+
+  <h1>Per-Group Error, Not Total MSE</h1>
+  <p class="hero-sub">Fine-Tuning Vision-Language-Action Models for 11-DoF Mobile Manipulation</p>
+
+  <p class="hero-authors">
+    <span class="a"><a href="https://paumontagut.github.io/" target="_blank" rel="noopener">Pau Montagut Bofi</a><sup>1,2</sup></span> ·
+    <span class="a"><a href="https://www.linkedin.com/in/mario-garc%C3%ADa-blasco-537273340/" target="_blank" rel="noopener">Mario García Blasco</a><sup>1,2</sup></span> ·
+    <span class="a"><a href="https://www.linkedin.com/in/tessapulli/" target="_blank" rel="noopener">Tessa Pulli</a><sup>1</sup></span> ·
+    <span class="a"><a href="https://www.acin.tuwien.ac.at/en/staff/vm/" target="_blank" rel="noopener">Markus Vincze</a><sup>1</sup></span>
+  </p>
+  <p class="hero-aff">
+    <sup>1</sup>Vision for Robotics Lab (V4R), ACIN, TU Wien &nbsp;·&nbsp; <sup>2</sup>Universitat Jaume I
+  </p>
+
+  <div class="hero-links">
+    <a href="https://arxiv.org/abs/2606.00253" target="_blank" rel="noopener">
+      <span class="bi bi-arxiv"></span> Paper
+    </a>
+    <a href="https://github.com/paumontagut/per-group-mse-vla" target="_blank" rel="noopener">
+      <span class="bi bi-github"></span> Code
+    </a>
+    <a href="https://huggingface.co/PauMontagut/per-group-mse-smolvla" target="_blank" rel="noopener">
+      <span class="bi bi-hf"></span> Model
+    </a>
+    <a href="https://github.com/paumontagut/per-group-mse-vla/blob/main/paper/poster.pdf" target="_blank" rel="noopener">
+      <span class="bi bi-pdf"></span> Poster
+    </a>
+  </div>
+</header>
+
+<div class="hero-divider" aria-hidden="true">
+  <i style="background:#3D7ABF"></i><i style="background:#E91E63"></i><i style="background:#2E8B57"></i><i style="background:#D4740E"></i>
+</div>
+
+<!-- ── DEMOS ── -->
+<section class="alt">
+  <div class="section-inner">
+    <div class="section-label">Robot demos</div>
+    <h2 class="section-title">The policy on the Toyota HSR</h2>
+    <p class="section-sub">
+      Three trials from the workshop track, each clip start to finish. Head camera,
+      hand camera and third-person view, side by side, at 2× speed.
+    </p>
+    <div class="demo-stack">
+      <div class="demo">
+        <div class="vwrap"><video src="assets/img/demo_task6.mp4" autoplay loop muted playsinline preload="metadata"></video></div>
+        <div class="demo-cap">
+          HSR picks the mug not at a corner and places it at the missing one
+          <span class="cap-meta">· 3 cameras · 2× speed</span>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="vwrap"><video src="assets/img/demo_task2.mp4" autoplay loop muted playsinline preload="metadata"></video></div>
+        <div class="demo-cap">
+          HSR fails to place the spoon in the empty mug
+          <span class="badge-fail">failure case</span>
+          <span class="cap-meta">· 3 cameras · 2× speed</span>
+        </div>
+      </div>
+      <div class="demo">
+        <div class="vwrap"><video src="assets/img/demo_task5.mp4" autoplay loop muted playsinline preload="metadata"></video></div>
+        <div class="demo-cap">
+          HSR opens the microwave, picks up the plate, places it inside, and closes the door
+          <span class="badge-steps">4-step task</span>
+          <span class="cap-meta">· highlights · 3 cameras · 2× speed</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABSTRACT ── -->
+<section>
+  <div class="section-inner narrow">
+    <div class="section-label">Abstract</div>
+    <h2 class="section-title">A single MSE can pick the wrong checkpoint</h2>
+    <div class="prose">
+      <p>
+        Vision-Language-Action models are usually evaluated offline with a single mean-squared
+        error over the full action vector. For the Toyota Human Support Robot, with 11 degrees
+        of freedom split across four functionally different joint groups (arm, gripper, head,
+        base), that single number hides which group is actually driving the error.
+      </p>
+      <p>
+        We decompose the offline MSE into the four joint groups and use the decomposition as
+        a checkpoint-selection signal. In a 60-trial real-robot evaluation against three
+        models, the <em>arm-MSE</em> ranking matched the robot ranking, while the
+        <em>total-MSE</em> ranking did not. The π₀.₅ fine-tune built on this analysis won
+        the AIRoA VLA Pipeline Competition at the ICRA 2026 workshop.
+      </p>
+    </div>
+    <div class="takeaway">
+      The lowest total MSE does not pick the best policy. <strong>Per-group MSE</strong> is a
+      better signal, and on the Toyota HSR the <strong>arm-MSE</strong> alone reproduces the
+      robot ranking.
+    </div>
+  </div>
+</section>
+
+<!-- ── PLATFORM ── -->
+<section class="alt">
+  <div class="section-inner narrow">
+    <div class="section-label">Platform</div>
+    <h2 class="section-title">The Toyota Human Support Robot</h2>
+    <div class="prose">
+      <p>
+        The HSR has 11 degrees of freedom split across four functionally different joint
+        groups. A 5-DoF arm, a 1-DoF parallel gripper, a 2-DoF head, and a 3-DoF holonomic
+        base. The four groups have very different scales and dynamics, which is what
+        motivates the per-group decomposition.
+      </p>
+    </div>
+    <div class="hsr-explore" id="hsr-explore">
+      <div class="hsr-stage">
+        <img src="assets/img/hsr_robot.png" alt="Toyota HSR" loading="lazy" decoding="async" width="640" height="968">
+        <button class="hsr-dot dot-head" data-group="head" style="left:29%; top:9%"  aria-label="Head joint group"></button>
+        <button class="hsr-dot dot-grip" data-group="grip" style="left:76%; top:35%" aria-label="Gripper joint group"></button>
+        <button class="hsr-dot dot-arm"  data-group="arm"  style="left:58%; top:56%" aria-label="Arm joint group"></button>
+        <button class="hsr-dot dot-base" data-group="base" style="left:48%; top:88%" aria-label="Base joint group"></button>
+      </div>
+      <div class="hsr-panel" id="hsr-panel">
+        <div class="hp-default" data-panel="default">
+          <div class="hp-title">11 degrees of freedom, 4 joint groups</div>
+          <p>Hover or tap a marker on the robot to see what each group does and how hard it is to learn.</p>
+        </div>
+        <div class="hp-card" data-panel="head" hidden>
+          <div class="hp-title" style="color:#2E8B57">Head · 2 joints</div>
+          <p class="hp-joints">head_pan · head_tilt</p>
+          <p>Points the RGB-D camera. Small range, slow motion, and the easiest group to learn.</p>
+          <div class="hp-mse">MSE 0.01 ×10⁻³ <span>best SmolVLA checkpoint</span></div>
+        </div>
+        <div class="hp-card" data-panel="grip" hidden>
+          <div class="hp-title" style="color:#E91E63">Gripper · 1 joint</div>
+          <p class="hp-joints">hand_motor</p>
+          <p>Parallel jaw, essentially binary. Its error concentrates on the open-close transitions and falls fast during fine-tuning.</p>
+          <div class="hp-mse">MSE 3.77 ×10⁻³ <span>best SmolVLA checkpoint</span></div>
+        </div>
+        <div class="hp-card" data-panel="arm" hidden>
+          <div class="hp-title" style="color:#3D7ABF">Arm · 5 joints</div>
+          <p class="hp-joints">arm_lift · arm_flex · arm_roll · wrist_flex · wrist_roll</p>
+          <p>Carries most of the manipulation signal. The arm-MSE ranking is the one that matched the robot ranking in our 60 trials.</p>
+          <div class="hp-mse">MSE 0.88 ×10⁻³ <span>best SmolVLA checkpoint</span></div>
+        </div>
+        <div class="hp-card" data-panel="base" hidden>
+          <div class="hp-title" style="color:#D4740E">Base · 3 joints</div>
+          <p class="hp-joints">base_x · base_y · base_theta</p>
+          <p>Holonomic, continuous navigation. SmolVLA had no base pretraining, so this group converges last and sets the ceiling on total MSE.</p>
+          <div class="hp-mse">MSE 3.18 ×10⁻³ <span>best SmolVLA checkpoint</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── METHOD ── -->
+<section>
+  <div class="section-inner narrow">
+    <div class="section-label">Method</div>
+    <h2 class="section-title">Two-phase fine-tuning, per-group MSE for selection</h2>
+    <div class="prose">
+      <p>
+        We start from the released SmolVLA backbone and run a generalist phase on the public
+        AIRoA MoMa dataset, which teaches the model the HSR observation layout and the 11-DoF
+        action space. We then continue with a task-specific top-up on a private subset of the
+        AIRoA ICRA 2026 dataset distributed only to the competing teams. For π₀.₅ we use an
+        expert-only fine-tune on top of the workshop baseline.
+      </p>
+      <p>
+        All offline evaluation is done with our per-group MSE script, which slices the squared
+        error into <strong>arm</strong>, <strong>gripper</strong>, <strong>head</strong> and
+        <strong>base</strong> rather than averaging the four blindly.
+      </p>
+    </div>
+<div class="fig pipeline-anim">
+<svg viewBox="0 0 1000 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animated VLA pipeline: vision, language and joint state flow through the frozen VL encoder and the trained action head into the four joint groups of the action chunk">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="var(--gray-border)"/>
+    </marker>
+  </defs>
+
+  <!-- connector paths (static) -->
+  <path id="pin1" d="M210,65  C275,65  255,100 348,100" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pin2" d="M210,190 C275,190 255,120 348,120" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pin3" d="M210,315 C285,315 255,140 348,140" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pmid" d="M485,170 L485,228" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pout1" d="M620,255 C705,255 690,143 758,143" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pout2" d="M620,270 C708,270 695,193 758,193" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pout3" d="M620,290 C712,290 700,243 758,243" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+  <path id="pout4" d="M620,305 C716,305 705,293 758,293" fill="none" stroke="var(--gray-border)" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- input boxes -->
+  <g class="box">
+    <rect x="20" y="30" width="190" height="70" rx="10"/>
+    <text x="115" y="58" class="t1" text-anchor="middle">Vision (RGB)</text>
+    <text x="115" y="80" class="t2" text-anchor="middle">head + hand cameras</text>
+  </g>
+  <g class="box">
+    <rect x="20" y="155" width="190" height="70" rx="10"/>
+    <text x="115" y="183" class="t1" text-anchor="middle">Language</text>
+    <text x="115" y="205" class="t2" text-anchor="middle">"Move the mug to..."</text>
+  </g>
+  <g class="box">
+    <rect x="20" y="280" width="190" height="70" rx="10"/>
+    <text x="115" y="308" class="t1" text-anchor="middle">Joint state</text>
+    <text x="115" y="330" class="t2" text-anchor="middle">11 dims</text>
+  </g>
+
+  <!-- model container -->
+  <rect x="322" y="18" width="326" height="344" rx="14" fill="none" stroke="var(--accent)" stroke-width="1.8" stroke-dasharray="6 5" opacity="0.75"/>
+  <text x="485" y="44" class="t-label t-label-accent" text-anchor="middle">VLA model</text>
+
+  <g class="box frozen-box">
+    <rect x="350" y="62" width="270" height="106" rx="10"/>
+    <text x="485" y="105" class="t1" text-anchor="middle">VL Encoder</text>
+    <text x="485" y="130" class="t2 frozen" text-anchor="middle">frozen ❄</text>
+  </g>
+  <g class="box trained-box">
+    <rect x="350" y="228" width="270" height="106" rx="10"/>
+    <text x="485" y="271" class="t1" text-anchor="middle">Action Head</text>
+    <text x="485" y="296" class="t2 trained" text-anchor="middle">trained ●</text>
+  </g>
+
+  <!-- output box -->
+  <g class="box">
+    <rect x="758" y="40" width="222" height="300" rx="10"/>
+    <text x="869" y="72" class="t1" text-anchor="middle">Action chunk</text>
+    <text x="869" y="94" class="t2" text-anchor="middle">50 steps × 11D</text>
+    <g class="row">
+      <circle cx="790" cy="138" r="5" fill="#3D7ABF"/>
+      <text x="806" y="143" class="t3">Arm · 5 joints</text>
+    </g>
+    <g class="row">
+      <circle cx="790" cy="188" r="5" fill="#E91E63"/>
+      <text x="806" y="193" class="t3">Gripper · 1 joint</text>
+    </g>
+    <g class="row">
+      <circle cx="790" cy="238" r="5" fill="#2E8B57"/>
+      <text x="806" y="243" class="t3">Head · 2 joints</text>
+    </g>
+    <g class="row">
+      <circle cx="790" cy="288" r="5" fill="#D4740E"/>
+      <text x="806" y="293" class="t3">Base · 3 joints</text>
+    </g>
+  </g>
+
+  <!-- flowing particles: inputs (neutral gray-blue) -->
+  <g class="dots">
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="0s"    repeatCount="indefinite"><mpath href="#pin1"/></animateMotion></circle>
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="2.1s"  repeatCount="indefinite"><mpath href="#pin1"/></animateMotion></circle>
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="0.7s"  repeatCount="indefinite"><mpath href="#pin2"/></animateMotion></circle>
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="2.8s"  repeatCount="indefinite"><mpath href="#pin2"/></animateMotion></circle>
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="1.4s"  repeatCount="indefinite"><mpath href="#pin3"/></animateMotion></circle>
+    <circle r="5" fill="#9aa2ad"><animateMotion dur="4.2s" begin="3.5s"  repeatCount="indefinite"><mpath href="#pin3"/></animateMotion></circle>
+
+    <!-- encoder to head (expert purple) -->
+    <circle r="5.5" fill="#E8663C"><animateMotion dur="1.8s" begin="0s"   repeatCount="indefinite"><mpath href="#pmid"/></animateMotion></circle>
+    <circle r="5.5" fill="#E8663C"><animateMotion dur="1.8s" begin="0.9s" repeatCount="indefinite"><mpath href="#pmid"/></animateMotion></circle>
+
+    <!-- head to action chunk (group colors) -->
+    <circle r="5" fill="#3D7ABF"><animateMotion dur="3.6s" begin="0s"    repeatCount="indefinite"><mpath href="#pout1"/></animateMotion></circle>
+    <circle r="5" fill="#3D7ABF"><animateMotion dur="3.6s" begin="1.8s"  repeatCount="indefinite"><mpath href="#pout1"/></animateMotion></circle>
+    <circle r="5" fill="#E91E63"><animateMotion dur="3.6s" begin="0.45s" repeatCount="indefinite"><mpath href="#pout2"/></animateMotion></circle>
+    <circle r="5" fill="#E91E63"><animateMotion dur="3.6s" begin="2.25s" repeatCount="indefinite"><mpath href="#pout2"/></animateMotion></circle>
+    <circle r="5" fill="#2E8B57"><animateMotion dur="3.6s" begin="0.9s"  repeatCount="indefinite"><mpath href="#pout3"/></animateMotion></circle>
+    <circle r="5" fill="#2E8B57"><animateMotion dur="3.6s" begin="2.7s"  repeatCount="indefinite"><mpath href="#pout3"/></animateMotion></circle>
+    <circle r="5" fill="#D4740E"><animateMotion dur="3.6s" begin="1.35s" repeatCount="indefinite"><mpath href="#pout4"/></animateMotion></circle>
+    <circle r="5" fill="#D4740E"><animateMotion dur="3.6s" begin="3.15s" repeatCount="indefinite"><mpath href="#pout4"/></animateMotion></circle>
+  </g>
+</svg>
+<div class="cap">The vision-language backbone stays frozen during fine-tuning. Only the action head is trained.</div>
+</div>
+
+  </div>
+</section>
+
+<!-- ── PER-GROUP MSE ── -->
+<section class="alt">
+  <div class="section-inner narrow">
+    <div class="section-label">Per-group MSE</div>
+    <h2 class="section-title">What the aggregate metric hides</h2>
+    <div class="prose">
+      <p>
+        The four joint groups converge at very different rates. The gripper falls fast, the
+        head is small and stable, the arm carries most of the manipulation signal, and the
+        base converges last and sets the ceiling on total MSE. Aggregating the four together
+        blends them into a single number whose ranking does not reflect the on-robot ranking.
+      </p>
+    </div>
+<div class="fig curves-anim">
+<svg viewBox="0 0 1060 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Animated per-joint-group MSE chart: the total MSE curve draws first, then decomposes into the arm, gripper, head and base curves">
+  <!-- phase captions -->
+  <text x="520" y="32" class="ph ph1" text-anchor="middle">One number: total MSE</text>
+  <text x="520" y="32" class="ph ph2" text-anchor="middle">The same training run, decomposed per joint group</text>
+
+  <!-- axes -->
+  <line x1="80" y1="420" x2="960" y2="420" class="ax"/>
+  <line x1="80" y1="50"  x2="80"  y2="420" class="ax"/>
+  <g class="tick">
+    <text x="68" y="397">0.01</text>
+    <text x="68" y="309">0.1</text>
+    <text x="68" y="221">1</text>
+    <text x="68" y="133">10</text>
+    <text x="30" y="240" transform="rotate(-90 30 240)" text-anchor="middle">MSE ×10⁻³ (log)</text>
+  </g>
+  <g class="xtick">
+    <text x="90"    y="445" transform="rotate(-38 90 445)">PT 20k</text>
+    <text x="156.2" y="445" transform="rotate(-38 156.2 445)">B8 1k</text>
+    <text x="222.3" y="445" transform="rotate(-38 222.3 445)">B8 3k</text>
+    <text x="288.5" y="445" transform="rotate(-38 288.5 445)">B8 5k</text>
+    <text x="354.6" y="445" transform="rotate(-38 354.6 445)">B32 5k</text>
+    <text x="420.8" y="445" transform="rotate(-38 420.8 445)">B32 10k</text>
+    <text x="486.9" y="445" transform="rotate(-38 486.9 445)">B32 15k</text>
+    <text x="553.1" y="445" transform="rotate(-38 553.1 445)">B32 20k</text>
+    <text x="619.2" y="445" transform="rotate(-38 619.2 445)">B32 25k</text>
+    <text x="685.4" y="445" transform="rotate(-38 685.4 445)">B32 30k</text>
+    <text x="751.5" y="445" transform="rotate(-38 751.5 445)">B32 35k</text>
+    <text x="817.7" y="445" transform="rotate(-38 817.7 445)">B32 40k</text>
+    <text x="883.8" y="445" transform="rotate(-38 883.8 445)">B32 45k</text>
+    <text x="950"   y="445" transform="rotate(-38 950 445)">B32 50k</text>
+  </g>
+
+  <!-- total curve, phase 1 -->
+  <path class="ln total" pathLength="1" d="M90.0,137.4 L156.2,140.4 L222.3,157.0 L288.5,163.0 L354.6,166.3 L420.8,153.4 L486.9,188.3 L553.1,183.6 L619.2,179.9 L685.4,178.7 L751.5,184.9 L817.7,199.3 L883.8,186.8 L950.0,184.9"/>
+  <text x="958" y="182" class="lbl lbl-total" data-toggle="total">Total</text>
+
+  <!-- per-group curves, phase 2 -->
+  <path class="ln g1" pathLength="1" d="M90.0,65.5 L156.2,81.1 L222.3,109.0 L288.5,110.2 L354.6,125.1 L420.8,121.6 L486.9,145.1 L553.1,158.8 L619.2,147.1 L685.4,141.9 L751.5,140.0 L817.7,166.7 L883.8,139.0 L950.0,148.6"/>
+  <path class="ln g2" pathLength="1" d="M90.0,140.3 L156.2,123.2 L222.3,139.5 L288.5,143.4 L354.6,139.3 L420.8,118.7 L486.9,165.3 L553.1,151.9 L619.2,147.9 L685.4,146.2 L751.5,159.9 L817.7,173.3 L883.8,167.3 L950.0,159.6"/>
+  <path class="ln g3" pathLength="1" d="M90.0,180.0 L156.2,184.7 L222.3,179.8 L288.5,198.1 L354.6,201.5 L420.8,205.8 L486.9,216.1 L553.1,214.9 L619.2,221.3 L685.4,228.2 L751.5,221.8 L817.7,222.2 L883.8,213.3 L950.0,210.2"/>
+  <path class="ln g4" pathLength="1" d="M90.0,371.0 L156.2,361.7 L222.3,397.5 L288.5,386.5 L354.6,402.0 L420.8,369.0 L486.9,402.0 L553.1,386.5 L619.2,397.5 L685.4,407.1 L751.5,302.9 L817.7,407.1 L883.8,383.5 L950.0,402.0"/>
+
+  <text x="958" y="150" class="lbl lbl-g1" data-toggle="g1">Gripper</text>
+  <text x="958" y="166" class="lbl lbl-g2" data-toggle="g2">Base</text>
+  <text x="958" y="212" class="lbl lbl-g3" data-toggle="g3">Arm</text>
+  <text x="958" y="404" class="lbl lbl-g4" data-toggle="g4">Head</text>
+
+  <!-- best checkpoint marker (B32 40k on the total curve) -->
+  <g class="best">
+    <circle cx="817.7" cy="199.3" r="7"/>
+    <line x1="817.7" y1="208" x2="817.7" y2="252" class="leader"/>
+    <text x="817.7" y="272" text-anchor="middle">best total · B32 40k</text>
+  </g>
+
+  <!-- interactive layer -->
+  <g class="xhair" id="xhair" visibility="hidden">
+    <line x1="0" y1="50" x2="0" y2="420" id="xhair-line"/>
+    <g id="tip">
+      <rect x="0" y="0" width="172" height="138" rx="10" id="tip-bg"/>
+      <text class="tip-t" id="tip-name" x="14" y="24"></text>
+      <text class="tip-r tip-arm"  x="14" y="48">Arm</text><text class="tip-v" id="tv-arm"  x="158" y="48"></text>
+      <text class="tip-r tip-grp"  x="14" y="68">Gripper</text><text class="tip-v" id="tv-grp"  x="158" y="68"></text>
+      <text class="tip-r tip-head" x="14" y="88">Head</text><text class="tip-v" id="tv-head" x="158" y="88"></text>
+      <text class="tip-r tip-base" x="14" y="108">Base</text><text class="tip-v" id="tv-base" x="158" y="108"></text>
+      <text class="tip-r tip-tot"  x="14" y="128">Total</text><text class="tip-v" id="tv-tot"  x="158" y="128"></text>
+    </g>
+  </g>
+  <rect id="hover-zone" x="80" y="40" width="880" height="390" fill="transparent"/>
+</svg>
+<div class="cap">Per-joint-group MSE across the SmolVLA training schedule, animated. The total draws first, then splits into the four joint groups. Hover the chart for exact values, click a legend label to hide that curve.<br>
+Checkpoint naming. <strong>PT</strong> is the generalist checkpoint after pretraining on AIRoA MoMa. <strong>B8</strong> and <strong>B32</strong> are task-specific fine-tuning runs with batch size 8 and 32, and the number that follows counts training steps, so B32 40k is the batch-32 run after 40,000 steps.</div>
+</div>
+
+  </div>
+</section>
+
+<!-- ── RESULTS ── -->
+<section>
+  <div class="section-inner narrow">
+    <div class="section-label">Results</div>
+    <h2 class="section-title">Arm-MSE matches the robot ranking, total MSE does not</h2>
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th class="num">Total MSE (×10⁻³)</th>
+            <th class="num">Arm MSE (×10⁻³)</th>
+            <th class="num">Robot score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>π₀.₅ baseline (80k)</td>
+            <td class="num">1.04</td>
+            <td class="num best">0.30</td>
+            <td class="num best">4.00 / 4</td>
+          </tr>
+          <tr>
+            <td>π₀.₅ (ours)</td>
+            <td class="num best">0.95</td>
+            <td class="num">0.59</td>
+            <td class="num">3.75 / 4</td>
+          </tr>
+          <tr>
+            <td>HSR-SmolVLA (40k)</td>
+            <td class="num">1.61</td>
+            <td class="num">0.88</td>
+            <td class="num">3.50 / 4</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="table-note">
+      Robot score is the mean over 20 trials per model on a 4-point rubric.
+      Mann-Whitney U (one-sided), <em>p</em> ≤ 0.010 between the π₀.₅ baseline and either
+      fine-tuned model. The lowest total MSE is not the best policy on the robot, while the
+      arm-MSE column matches the robot ranking. The 60 raw scores and the script that
+      recomputes these statistics are in the
+      <a href="https://github.com/paumontagut/per-group-mse-vla/tree/main/data" target="_blank" rel="noopener">repository</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ── FUTURE WORK ── -->
+<section class="alt">
+  <div class="section-inner narrow">
+    <div class="section-label">Future work</div>
+    <h2 class="section-title">From diagnostic to training signal</h2>
+    <div class="prose">
+      <p>
+        The per-group decomposition is not only a diagnostic. The same analysis can be
+        brought into the training loop itself, for example by weighting the joint groups
+        in the action loss so the optimizer spends its capacity where the robot actually
+        needs it, or by scheduling that weighting as the groups converge at different
+        rates. We are actively investigating this direction and it will be the subject
+        of upcoming work.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEAM ── -->
+<section class="alt">
+  <div class="section-inner narrow">
+    <div class="section-label">Team</div>
+    <h2 class="section-title">V4R Lab, ACIN, TU Wien</h2>
+    <div class="members">
+      <a class="member" href="https://paumontagut.github.io/" target="_blank" rel="noopener">
+        <img src="assets/img/team_pau.jpg" loading="lazy" decoding="async" width="400" height="400" alt="Pau Montagut Bofi">
+        <div class="m-name">Pau Montagut Bofi</div>
+        <div class="m-role">V4R, TU Wien · UJI</div>
+      </a>
+      <a class="member" href="https://www.linkedin.com/in/mario-garc%C3%ADa-blasco-537273340/" target="_blank" rel="noopener">
+        <img src="assets/img/team_mario.jpg" loading="lazy" decoding="async" width="400" height="400" alt="Mario García Blasco">
+        <div class="m-name">Mario García Blasco</div>
+        <div class="m-role">V4R, TU Wien · UJI</div>
+      </a>
+      <a class="member" href="https://www.linkedin.com/in/tessapulli/" target="_blank" rel="noopener">
+        <img src="assets/img/team_tessa.jpg" loading="lazy" decoding="async" width="400" height="400" alt="Tessa Pulli">
+        <div class="m-name">Tessa Pulli</div>
+        <div class="m-role">V4R, TU Wien</div>
+      </a>
+      <a class="member" href="https://www.acin.tuwien.ac.at/en/staff/vm/" target="_blank" rel="noopener">
+        <img src="assets/img/team_markus.jpg" loading="lazy" decoding="async" width="400" height="400" alt="Markus Vincze">
+        <div class="m-name">Markus Vincze</div>
+        <div class="m-role">V4R, TU Wien</div>
+      </a>
+    </div>
+    <div class="prose">
+      <p>
+        The paper is the result of a collaboration at the Vision for Robotics Lab between
+        Pau Montagut Bofi, Mario García Blasco, Tessa Pulli and Markus Vincze. The V4R lab
+        provided access to the Toyota HSR and the GPU infrastructure used for training and
+        offline evaluation.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── CITATION ── -->
+<section>
+  <div class="section-inner narrow">
+    <div class="section-label">Citation</div>
+    <h2 class="section-title">BibTeX</h2>
+    <pre class="bib">@inproceedings{montagut2026pergroup,
+  title  = {Per-Group Error, Not Total {MSE}: Fine-Tuning Vision-Language-Action
+            Models for 11-{DoF} Mobile Manipulation},
+  author = {Montagut Bofi, Pau and Garc\'ia Blasco, Mario and
+            Pulli, Tessa and Vincze, Markus},
+  booktitle = {ICRA 2026 Workshop on From Data to Decisions},
+  year   = {2026},
+  eprint = {2606.00253},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.RO},
+  url    = {https://arxiv.org/abs/2606.00253}
+}</pre>
+  </div>
+</section>
+
+<footer>
+  <div class="f-links">
+    <a href="https://arxiv.org/abs/2606.00253" target="_blank" rel="noopener">
+      <span class="bi bi-arxiv"></span> Paper
+    </a>
+    <a href="https://github.com/paumontagut/per-group-mse-vla" target="_blank" rel="noopener">
+      <span class="bi bi-github"></span> Code
+    </a>
+    <a href="https://huggingface.co/PauMontagut/per-group-mse-smolvla" target="_blank" rel="noopener">
+      <span class="bi bi-hf"></span> Model
+    </a>
+    <a href="https://github.com/paumontagut/per-group-mse-vla/blob/main/paper/poster.pdf" target="_blank" rel="noopener">
+      <span class="bi bi-pdf"></span> Poster
+    </a>
+  </div>
+  <div class="f-related">
+    <span class="f-rel-label">Related</span>
+    <a href="https://icra2026vlapipeline.github.io/" target="_blank" rel="noopener">From Data to Decisions workshop</a>
+    <a href="https://arxiv.org/abs/2506.01844" target="_blank" rel="noopener">SmolVLA paper</a>
+    <a href="https://arxiv.org/abs/2504.16054" target="_blank" rel="noopener">π₀.₅ paper</a>
+    <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a>
+    <a href="https://github.com/Physical-Intelligence/openpi" target="_blank" rel="noopener">openpi</a>
+    <a href="https://github.com/airoa-org" target="_blank" rel="noopener">AIRoA</a>
+  </div>
+  <div class="f-license">Code released under the MIT License. Paper and poster under CC BY 4.0.</div>
+  <div>© 2026 · Vision for Robotics Lab (V4R), ACIN, TU Wien</div>
+</footer>
+
+
+<script>
+(function () {
+  var svg = document.querySelector('.curves-anim svg');
+  if (!svg) return;
+  var cps = ["PT 20k","B8 1k","B8 3k","B8 5k","B32 5k","B32 10k","B32 15k","B32 20k","B32 25k","B32 30k","B32 35k","B32 40k","B32 45k","B32 50k"];
+  var data = {
+    arm:  [2.668,2.359,2.679,1.661,1.518,1.359,1.038,1.069,0.905,0.755,0.894,0.883,1.115,1.210],
+    grp:  [53.343,35.457,17.073,16.554,11.202,12.283,6.650,4.642,6.313,7.221,7.593,3.773,7.790,6.061],
+    head: [0.018,0.023,0.009,0.012,0.008,0.019,0.008,0.012,0.009,0.007,0.107,0.007,0.013,0.008],
+    base: [7.543,11.783,7.686,6.954,7.726,13.247,3.916,5.562,6.173,6.455,4.514,3.175,3.714,4.550],
+    tot:  [8.122,7.513,4.868,4.159,3.817,5.351,2.146,2.427,2.671,2.762,2.347,1.611,2.230,2.343]
+  };
+  var X0 = 90, X1 = 950, N = 14;
+  var zone = svg.getElementById('hover-zone');
+  var xh = svg.getElementById('xhair');
+  var xline = svg.getElementById('xhair-line');
+  var tip = svg.getElementById('tip');
+
+  function fmt(v) { return v.toFixed(v >= 10 ? 1 : 3); }
+
+  function svgX(evt) {
+    var pt = svg.createSVGPoint();
+    pt.x = evt.clientX; pt.y = evt.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse()).x;
+  }
+
+  zone.addEventListener('pointerenter', function () {
+    svg.classList.add('interacting');
+    xh.setAttribute('visibility', 'visible');
+  });
+  zone.addEventListener('pointermove', function (evt) {
+    var x = svgX(evt);
+    var i = Math.round((x - X0) / ((X1 - X0) / (N - 1)));
+    i = Math.max(0, Math.min(N - 1, i));
+    var cx = X0 + i * (X1 - X0) / (N - 1);
+    xline.setAttribute('x1', cx); xline.setAttribute('x2', cx);
+    var tx = cx + 14; if (tx > 800) tx = cx - 186;
+    tip.setAttribute('transform', 'translate(' + tx + ',58)');
+    svg.getElementById('tip-name').textContent = cps[i];
+    svg.getElementById('tv-arm').textContent = fmt(data.arm[i]);
+    svg.getElementById('tv-grp').textContent = fmt(data.grp[i]);
+    svg.getElementById('tv-head').textContent = fmt(data.head[i]);
+    svg.getElementById('tv-base').textContent = fmt(data.base[i]);
+    svg.getElementById('tv-tot').textContent = fmt(data.tot[i]);
+  });
+  zone.addEventListener('pointerleave', function () {
+    svg.classList.remove('interacting');
+    xh.setAttribute('visibility', 'hidden');
+  });
+
+  svg.querySelectorAll('[data-toggle]').forEach(function (lbl) {
+    lbl.style.cursor = 'pointer';
+    lbl.addEventListener('click', function () {
+      var key = lbl.getAttribute('data-toggle');
+      var line = svg.querySelector(key === 'total' ? '.ln.total' : '.ln.' + key);
+      var off = line.classList.toggle('curve-off');
+      lbl.classList.toggle('lbl-off', off);
+    });
+  });
+})();
+</script>
+<script>
+(function () {
+  var box = document.getElementById('hsr-explore');
+  if (!box) return;
+  var panels = box.querySelectorAll('[data-panel]');
+  function show(name) {
+    panels.forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== name; });
+    box.querySelectorAll('.hsr-dot').forEach(function (d) {
+      d.classList.toggle('active', d.getAttribute('data-group') === name);
+    });
+  }
+  box.querySelectorAll('.hsr-dot').forEach(function (dot) {
+    var name = dot.getAttribute('data-group');
+    dot.addEventListener('pointerenter', function () { show(name); });
+    dot.addEventListener('click', function () { show(name); });
+  });
+  box.querySelector('.hsr-stage').addEventListener('pointerleave', function () { show('default'); });
+})();
+</script>
+<script>
+  function toggleTheme() {
+    document.documentElement.classList.add('theme-transition');
+    document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+    setTimeout(() => document.documentElement.classList.remove('theme-transition'), 450);
+  }
+  if (localStorage.getItem('theme') === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
+</script>
+</body>
+</html>
